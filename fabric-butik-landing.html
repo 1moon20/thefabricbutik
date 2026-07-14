@@ -1,0 +1,699 @@
+<!doctype html><html dir="auto"><head><meta http-equiv="Content-Security-Policy" content="default-src 'unsafe-inline' 'unsafe-eval' https: data: blob:; connect-src 'none'; form-action 'none'; base-uri 'none'">
+<script id="__base44_dark_class__">document.documentElement.classList.remove('dark');</script>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Wix+Madefor+Text:wght@400;500;600;700&display=swap">
+<style id="__base44_editor_theme__">
+:root {
+  --background: 38 27% 94%;
+  --foreground: 0 0% 4%;
+  --card: 0 0% 100%;
+  --card-foreground: 0 0% 4%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 0 0% 4%;
+  --primary: 21 42% 55%;
+  --primary-foreground: 0 0% 100%;
+  --secondary: 0 0% 96%;
+  --secondary-foreground: 0 0% 9%;
+  --muted: 39 17% 93%;
+  --muted-foreground: 0 0% 45%;
+  --accent: 0 0% 96%;
+  --accent-foreground: 0 0% 9%;
+  --destructive: 0 84% 60%;
+  --destructive-foreground: 0 0% 98%;
+  --border: 0 0% 98%;
+  --input: 0 0% 98%;
+  --ring: 21 42% 55%;
+  --radius: 0.5rem;
+  color-scheme: light;
+}
+.dark {
+  --background: 220 5% 11%;
+  --foreground: 0 0% 99%;
+  --card: 0 1% 14%;
+  --card-foreground: 0 0% 99%;
+  --popover: 0 1% 14%;
+  --popover-foreground: 0 0% 99%;
+  --primary: 21 42% 55%;
+  --primary-foreground: 0 0% 99%;
+  --secondary: 0 0% 18%;
+  --secondary-foreground: 0 0% 99%;
+  --muted: 0 0% 18%;
+  --muted-foreground: 0 0% 65%;
+  --accent: 0 0% 18%;
+  --accent-foreground: 0 0% 99%;
+  --destructive: 0 62% 30%;
+  --destructive-foreground: 0 0% 99%;
+  --border: 0 0% 16%;
+  --input: 0 0% 16%;
+  --ring: 21 42% 55%;
+  color-scheme: dark;
+}
+*, *::before, *::after { box-sizing: border-box; }
+/* shadcn's base layer: default every element's border-color to the theme
+   token. Without this, Tailwind's bare `border` utility only sets width and
+   the color falls back to currentColor (near-black text) — so the model's
+   `border` cards render heavy/dark and the `--border` value is ignored.
+   Explicit `border-{color}` utilities and inline styles still override. */
+*, *::before, *::after { border-color: hsl(var(--border)); }
+html, body {
+  margin: 0 !important;
+  padding: 0;
+  overflow: auto !important;
+  /* Inline card: transparent, so the real chat surface (a gradient, not the
+     single flat `--background` stop) shows straight through and the artifact
+     reads as inline chat content in both themes. Standalone saved file: opaque
+     `--background` so it stays readable on its own page. `--card` stays
+     elevated for emphasis blocks (stat tiles, panels) so hierarchy reads. */
+  background: hsl(var(--background)) !important;
+  color: hsl(var(--foreground));
+  font-family: 'WixMadeforText', 'Wix Madefor Text', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+/* 8px (vs 16px) — minimal breathing room from the iframe edge so
+   tightly-composed dashboards don't ship a fat empty halo at the top
+   before their first element. LLMs add their own inner spacing. */
+body { padding: 8px; }
+code, kbd, pre, samp { font-family: 'WixMadeforMonospace', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+a { color: hsl(var(--primary)); }
+hr { border: 0; border-top: 1px solid hsl(var(--border)); }
+h1, h2, h3, h4, h5, h6 { font-weight: 600; color: hsl(var(--foreground)); }
+</style>
+<script id="__base44_tw_config__">
+window.tailwind = window.tailwind || {};
+window.tailwind.config = {
+  darkMode: 'class',
+  theme: {
+    extend: {
+      colors: {
+        border: 'hsl(var(--border))',
+        input: 'hsl(var(--input))',
+        ring: 'hsl(var(--ring))',
+        background: 'hsl(var(--background))',
+        foreground: 'hsl(var(--foreground))',
+        primary: { DEFAULT: 'hsl(var(--primary))', foreground: 'hsl(var(--primary-foreground))' },
+        secondary: { DEFAULT: 'hsl(var(--secondary))', foreground: 'hsl(var(--secondary-foreground))' },
+        destructive: { DEFAULT: 'hsl(var(--destructive))', foreground: 'hsl(var(--destructive-foreground))' },
+        muted: { DEFAULT: 'hsl(var(--muted))', foreground: 'hsl(var(--muted-foreground))' },
+        accent: { DEFAULT: 'hsl(var(--accent))', foreground: 'hsl(var(--accent-foreground))' },
+        popover: { DEFAULT: 'hsl(var(--popover))', foreground: 'hsl(var(--popover-foreground))' },
+        card: { DEFAULT: 'hsl(var(--card))', foreground: 'hsl(var(--card-foreground))' },
+      },
+      // A bare `border` / `divide-*` (no color) falls back to Tailwind
+      // preflight's DEFAULT, which is a FIXED gray-200 (#e5e7eb) — subtle on the
+      // light card but near-white glare on the dark card. The `colors.border`
+      // map above only creates the `border-border` class; it does NOT set the
+      // uncolored default. Point the DEFAULT at the theme token so an uncolored
+      // border adapts to dark mode like the rest of the palette. (Explicit
+      // `border-primary` etc. still override.)
+      borderColor: { DEFAULT: 'hsl(var(--border))' },
+      divideColor: { DEFAULT: 'hsl(var(--border))' },
+      borderRadius: {
+        lg: 'var(--radius)',
+        md: 'calc(var(--radius) - 2px)',
+        sm: 'calc(var(--radius) - 4px)',
+      },
+      fontFamily: {
+        // Same two-name stack as `FONT_SANS_STACK` above. The
+        // sandboxed null-origin iframe lands on `Wix Madefor Text`
+        // (Google Fonts' name); `WixMadeforText` is here only for
+        // defense-in-depth in case the iframe ever runs same-origin.
+        sans: ['WixMadeforText', 'Wix Madefor Text', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'sans-serif'],
+        mono: ['WixMadeforMonospace', 'ui-monospace', 'SFMono-Regular', 'Menlo', 'monospace'],
+      },
+    },
+  },
+};
+</script>
+<script src="https://cdn.tailwindcss.com" id="__base44_tw_cdn__"></script></head><body><!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>The Fabric Butik | Premium Fabrics & Custom Printing – Abuja</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --gold: #B8922A;
+      --gold-light: #D4A840;
+      --gold-pale: #F5EDD8;
+      --cream: #FAF7F2;
+      --dark: #1A1410;
+      --mid: #3D2E1A;
+      --text: #2C2218;
+      --muted: #8A7560;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background: var(--cream);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    /* NAV */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 18px 48px;
+      background: rgba(26,20,16,0.92);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(184,146,42,0.25);
+    }
+    .nav-logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.35rem; font-weight: 600; letter-spacing: 0.12em;
+      color: var(--gold-light); text-transform: uppercase;
+      text-decoration: none;
+    }
+    .nav-links { display: flex; gap: 32px; list-style: none; }
+    .nav-links a {
+      color: rgba(255,255,255,0.75); text-decoration: none;
+      font-size: 0.7rem; letter-spacing: 0.15em; text-transform: uppercase;
+      font-weight: 500; transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--gold-light); }
+    .nav-cta {
+      background: var(--gold); color: #fff; border: none;
+      padding: 9px 22px; font-size: 0.68rem; letter-spacing: 0.14em;
+      text-transform: uppercase; font-weight: 600; cursor: pointer;
+      font-family: 'Montserrat', sans-serif; text-decoration: none;
+      transition: background 0.2s;
+    }
+    .nav-cta:hover { background: var(--gold-light); }
+
+    /* HERO */
+    .hero {
+      min-height: 100vh;
+      background: linear-gradient(135deg, #1A1410 0%, #2C1F0E 50%, #1A1410 100%);
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      text-align: center; padding: 120px 24px 80px;
+      position: relative; overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse at center, rgba(184,146,42,0.12) 0%, transparent 70%);
+    }
+    .hero-badge {
+      font-size: 0.65rem; letter-spacing: 0.3em; text-transform: uppercase;
+      color: var(--gold); border: 1px solid rgba(184,146,42,0.4);
+      padding: 7px 20px; margin-bottom: 28px; display: inline-block;
+      font-weight: 600;
+    }
+    .hero h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(3rem, 7vw, 5.5rem);
+      font-weight: 300; color: #F5EDD8; line-height: 1.1;
+      margin-bottom: 10px; letter-spacing: 0.02em;
+    }
+    .hero h1 em { font-style: italic; color: var(--gold-light); }
+    .hero-sub {
+      font-size: 0.78rem; letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--gold); margin-bottom: 22px; font-weight: 500;
+    }
+    .hero p {
+      max-width: 540px; color: rgba(245,237,216,0.72);
+      font-size: 0.92rem; font-weight: 300; line-height: 1.8;
+      margin: 0 auto 40px;
+    }
+    .hero-buttons { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+    .btn-primary {
+      background: var(--gold); color: #fff;
+      padding: 14px 36px; font-size: 0.72rem; letter-spacing: 0.15em;
+      text-transform: uppercase; font-weight: 600; text-decoration: none;
+      display: inline-block; transition: background 0.2s, transform 0.15s;
+      font-family: 'Montserrat', sans-serif;
+    }
+    .btn-primary:hover { background: var(--gold-light); transform: translateY(-1px); }
+    .btn-outline {
+      border: 1px solid rgba(184,146,42,0.6); color: var(--gold-light);
+      padding: 14px 36px; font-size: 0.72rem; letter-spacing: 0.15em;
+      text-transform: uppercase; font-weight: 600; text-decoration: none;
+      display: inline-block; transition: all 0.2s; font-family: 'Montserrat', sans-serif;
+    }
+    .btn-outline:hover { background: rgba(184,146,42,0.12); transform: translateY(-1px); }
+
+    /* STATS BAR */
+    .stats {
+      background: var(--dark);
+      display: flex; justify-content: center; gap: 0; flex-wrap: wrap;
+      border-top: 1px solid rgba(184,146,42,0.2);
+      border-bottom: 1px solid rgba(184,146,42,0.2);
+    }
+    .stat-item {
+      padding: 28px 48px; text-align: center;
+      border-right: 1px solid rgba(184,146,42,0.15);
+      flex: 1; min-width: 150px;
+    }
+    .stat-item:last-child { border-right: none; }
+    .stat-number {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2.2rem; color: var(--gold-light); font-weight: 500;
+      display: block;
+    }
+    .stat-label {
+      font-size: 0.62rem; letter-spacing: 0.18em; text-transform: uppercase;
+      color: rgba(255,255,255,0.45); font-weight: 500; margin-top: 4px;
+    }
+
+    /* SECTION SHARED */
+    section { padding: 90px 24px; }
+    .section-tag {
+      font-size: 0.62rem; letter-spacing: 0.3em; text-transform: uppercase;
+      color: var(--gold); font-weight: 600; margin-bottom: 14px;
+      display: block;
+    }
+    .section-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2rem, 4vw, 3.2rem); font-weight: 400;
+      line-height: 1.2; color: var(--dark); margin-bottom: 18px;
+    }
+    .section-title em { font-style: italic; color: var(--gold); }
+    .section-desc {
+      color: var(--muted); font-size: 0.9rem; font-weight: 300;
+      line-height: 1.9; max-width: 520px;
+    }
+
+    /* ABOUT */
+    .about {
+      background: var(--cream);
+      display: flex; align-items: center; justify-content: center;
+      gap: 80px; flex-wrap: wrap; max-width: 1100px; margin: 0 auto;
+    }
+    .about-text { flex: 1; min-width: 280px; max-width: 480px; }
+    .about-visual {
+      flex: 1; min-width: 280px; max-width: 420px;
+      background: linear-gradient(145deg, #2C1F0E, #1A1410);
+      padding: 50px 40px; position: relative;
+    }
+    .about-visual::before {
+      content: '';
+      position: absolute; top: -10px; left: -10px; right: 10px; bottom: 10px;
+      border: 1px solid rgba(184,146,42,0.35);
+      pointer-events: none;
+    }
+    .about-quote {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.3rem; font-weight: 300; font-style: italic;
+      color: var(--gold-pale); line-height: 1.7; margin-bottom: 20px;
+    }
+    .about-quote-attr {
+      font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--gold); font-weight: 600;
+    }
+
+    /* COLLECTIONS */
+    .collections-section { background: #F2ECE3; }
+    .collections-inner { max-width: 1100px; margin: 0 auto; }
+    .collections-header { text-align: center; margin-bottom: 50px; }
+    .collections-header .section-desc { margin: 0 auto; }
+    .grid {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 2px;
+    }
+    .collection-card {
+      background: var(--dark); padding: 40px 28px;
+      position: relative; overflow: hidden; cursor: pointer;
+      transition: transform 0.25s;
+      border: 1px solid rgba(184,146,42,0.1);
+    }
+    .collection-card:hover { transform: translateY(-3px); }
+    .collection-card::after {
+      content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 2px;
+      background: var(--gold); transform: scaleX(0); transition: transform 0.3s;
+      transform-origin: left;
+    }
+    .collection-card:hover::after { transform: scaleX(1); }
+    .card-icon {
+      width: 40px; height: 40px; margin-bottom: 16px;
+      border: 1px solid rgba(184,146,42,0.4);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--gold); font-size: 1.1rem;
+    }
+    .card-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.25rem; color: var(--gold-pale); font-weight: 500;
+      margin-bottom: 8px;
+    }
+    .card-desc { font-size: 0.72rem; color: rgba(255,255,255,0.4); font-weight: 300; line-height: 1.6; }
+
+    /* CUSTOM PRINTING */
+    .custom-section {
+      background: linear-gradient(135deg, #1A1410 0%, #2C1F0E 100%);
+      color: #fff; text-align: center;
+    }
+    .custom-inner { max-width: 700px; margin: 0 auto; }
+    .custom-section .section-title { color: var(--gold-pale); }
+    .custom-section .section-desc { color: rgba(245,237,216,0.65); margin: 0 auto 40px; }
+    .steps {
+      display: flex; justify-content: center; gap: 40px;
+      flex-wrap: wrap; margin: 50px 0;
+    }
+    .step { text-align: center; flex: 1; min-width: 130px; max-width: 180px; }
+    .step-num {
+      width: 52px; height: 52px; border: 1px solid rgba(184,146,42,0.5);
+      border-radius: 50%; display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 14px;
+      font-family: 'Cormorant Garamond', serif; font-size: 1.4rem; color: var(--gold);
+    }
+    .step-label {
+      font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase;
+      color: rgba(245,237,216,0.8); font-weight: 500;
+    }
+    .step-desc { font-size: 0.72rem; color: rgba(245,237,216,0.45); margin-top: 6px; font-weight: 300; }
+
+    /* REVIEWS */
+    .reviews-section { background: var(--cream); }
+    .reviews-inner { max-width: 1000px; margin: 0 auto; text-align: center; }
+    .stars-row { color: var(--gold); font-size: 1.2rem; margin-bottom: 8px; }
+    .rating-big {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 4rem; color: var(--gold); font-weight: 500; line-height: 1;
+    }
+    .rating-label { font-size: 0.68rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); }
+    .reviews-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 24px; margin-top: 50px;
+    }
+    .review-card {
+      background: #fff; padding: 32px 28px;
+      border: 1px solid rgba(184,146,42,0.12);
+      text-align: left;
+    }
+    .review-stars { color: var(--gold); font-size: 0.85rem; margin-bottom: 14px; }
+    .review-text {
+      font-size: 0.87rem; color: var(--muted); font-weight: 300; line-height: 1.8;
+      font-style: italic; margin-bottom: 16px;
+    }
+    .review-name {
+      font-size: 0.68rem; letter-spacing: 0.14em; text-transform: uppercase;
+      color: var(--gold); font-weight: 600;
+    }
+
+    /* CONTACT */
+    .contact-section {
+      background: var(--dark); color: #fff; text-align: center;
+    }
+    .contact-inner { max-width: 700px; margin: 0 auto; }
+    .contact-section .section-title { color: var(--gold-pale); }
+    .contact-cards {
+      display: flex; justify-content: center; gap: 24px;
+      flex-wrap: wrap; margin: 40px 0;
+    }
+    .contact-card {
+      border: 1px solid rgba(184,146,42,0.3); padding: 28px 32px;
+      text-align: center; flex: 1; min-width: 180px; max-width: 220px;
+    }
+    .contact-card-icon {
+      font-size: 1.5rem; margin-bottom: 12px; color: var(--gold);
+    }
+    .contact-card-label {
+      font-size: 0.6rem; letter-spacing: 0.2em; text-transform: uppercase;
+      color: rgba(255,255,255,0.4); margin-bottom: 8px;
+    }
+    .contact-card-val {
+      font-size: 0.82rem; color: var(--gold-pale); font-weight: 400;
+    }
+    .contact-card-val a { color: inherit; text-decoration: none; }
+
+    /* FOOTER */
+    footer {
+      background: #0D0A07;
+      padding: 40px 48px 30px;
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 20px;
+      border-top: 1px solid rgba(184,146,42,0.15);
+    }
+    .footer-logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.2rem; color: var(--gold-light); font-weight: 500;
+      letter-spacing: 0.12em; text-transform: uppercase;
+    }
+    .footer-tagline {
+      font-size: 0.62rem; letter-spacing: 0.14em; text-transform: uppercase;
+      color: rgba(255,255,255,0.3); margin-top: 4px;
+    }
+    .footer-links { display: flex; gap: 24px; }
+    .footer-links a {
+      color: rgba(255,255,255,0.35); text-decoration: none;
+      font-size: 0.65rem; letter-spacing: 0.12em; text-transform: uppercase;
+      transition: color 0.2s;
+    }
+    .footer-links a:hover { color: var(--gold-light); }
+    .footer-copy {
+      font-size: 0.62rem; color: rgba(255,255,255,0.2);
+      width: 100%;
+    }
+
+    /* DIVIDER */
+    .ornament {
+      display: flex; align-items: center; gap: 16px;
+      justify-content: center; margin: 20px 0 30px;
+    }
+    .ornament-line { flex: 1; max-width: 80px; height: 1px; background: rgba(184,146,42,0.35); }
+    .ornament-diamond {
+      width: 6px; height: 6px; background: var(--gold);
+      transform: rotate(45deg);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <a href="#" class="nav-logo">The Fabric Butik</a>
+    <ul class="nav-links">
+      <li><a href="#collections">Collections</a></li>
+      <li><a href="#custom">Custom Printing</a></li>
+      <li><a href="#about">About</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+    <a href="https://thefabricbutik.com/shop/" target="_blank" class="nav-cta">Shop Now</a>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-badge">Premium Fabrics · Custom Printing · Abuja, Nigeria</div>
+    <div class="hero-sub">New Collection 2026</div>
+    <h1>Where <em>Luxury</em><br>Meets Fabric</h1>
+    <p>Rare finds, exquisite textures, and custom-printed fabrics curated for designers, fashion lovers, and creators across Nigeria and beyond.</p>
+    <div class="hero-buttons">
+      <a href="https://thefabricbutik.com/shop/" target="_blank" class="btn-primary">Explore Collections</a>
+      <a href="https://wa.me/2348136011206" target="_blank" class="btn-outline">Order on WhatsApp</a>
+    </div>
+  </section>
+
+  <!-- STATS -->
+  <div class="stats">
+    <div class="stat-item">
+      <span class="stat-number">4.9★</span>
+      <span class="stat-label">Google Rating</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-number">27K+</span>
+      <span class="stat-label">Instagram Followers</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-number">50+</span>
+      <span class="stat-label">Fabric Varieties</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-number">WW</span>
+      <span class="stat-label">Worldwide Shipping</span>
+    </div>
+  </div>
+
+  <!-- ABOUT -->
+  <section id="about" style="padding: 90px 24px;">
+    <div class="about">
+      <div class="about-text">
+        <span class="section-tag">Our Story</span>
+        <h2 class="section-title">Born from a love of <em>quality textiles</em></h2>
+        <p class="section-desc">The Fabric Butik started as a passion for sourcing the finest fabrics and grew into a brand serving designers, fashion lovers, and creators across Nigeria, Qatar, and beyond.</p>
+        <br/>
+        <p class="section-desc">Every piece in our collection is carefully selected for quality, texture, and finish — from the softest silks to the most delicate chiffons and organzas.</p>
+        <br/>
+        <a href="https://thefabricbutik.com/about-us/" target="_blank" class="btn-primary" style="margin-top:10px;">Learn More</a>
+      </div>
+      <div class="about-visual">
+        <p class="about-quote">"The Fabric Butik is where luxury fabric meets effortless style — curated collections for those who create with intention."</p>
+        <span class="about-quote-attr">— The Fabric Butik</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- COLLECTIONS -->
+  <section id="collections" class="collections-section">
+    <div class="collections-inner">
+      <div class="collections-header">
+        <span class="section-tag">Curated For You</span>
+        <h2 class="section-title" style="margin:0 auto 14px;">Our <em>Collections</em></h2>
+        <p class="section-desc">Explore an extensive range of premium fabrics, from everyday elegance to runway-ready materials.</p>
+      </div>
+      <div class="grid">
+        <div class="collection-card">
+          <div class="card-icon">✦</div>
+          <div class="card-name">Silk & Chiffon</div>
+          <div class="card-desc">Lightweight luxury. Crystal chiffon, liquid organza, and TFB silks.</div>
+        </div>
+        <div class="collection-card">
+          <div class="card-icon">◈</div>
+          <div class="card-name">Brocade</div>
+          <div class="card-desc">Rich woven textures. Asymmetric brocade, Paduasoy, and Zibeline.</div>
+        </div>
+        <div class="collection-card">
+          <div class="card-icon">⬡</div>
+          <div class="card-name">Pleated Fabrics</div>
+          <div class="card-desc">Turkish pleats, straight pleats, TFB asymmetrical, and Silk pleats.</div>
+        </div>
+        <div class="collection-card">
+          <div class="card-icon">◇</div>
+          <div class="card-name">Sequins & Mesh</div>
+          <div class="card-desc">Small sequins, sequin denim, scuba net, and TFB mesh.</div>
+        </div>
+        <div class="collection-card">
+          <div class="card-icon">✿</div>
+          <div class="card-name">Crepe & Linen</div>
+          <div class="card-desc">Crinkled crepe, crystal crepe, cotton stripes, and more.</div>
+        </div>
+        <div class="collection-card">
+          <div class="card-icon">◉</div>
+          <div class="card-name">Leather & Fur</div>
+          <div class="card-desc">Premium thick leather and specialty fur fabrics.</div>
+        </div>
+      </div>
+      <div style="text-align:center; margin-top:40px;">
+        <a href="https://thefabricbutik.com/shop/" target="_blank" class="btn-primary">View All Fabrics</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- CUSTOM PRINTING -->
+  <section id="custom" class="custom-section">
+    <div class="custom-inner">
+      <span class="section-tag" style="display:block; text-align:center;">New Service</span>
+      <h2 class="section-title">Your Design. Your Fabric.<br><em>Your Way.</em></h2>
+      <p class="section-desc">Upload your design, choose your base fabric and we handle the rest. Custom prints made to order — for designers, brands, and creators who want something truly unique.</p>
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">01</div>
+          <div class="step-label">Upload Design</div>
+          <div class="step-desc">Send us your artwork or pattern</div>
+        </div>
+        <div class="step">
+          <div class="step-num">02</div>
+          <div class="step-label">Choose Fabric</div>
+          <div class="step-desc">Pick from our premium base fabrics</div>
+        </div>
+        <div class="step">
+          <div class="step-num">03</div>
+          <div class="step-label">We Print</div>
+          <div class="step-desc">High-quality printing, made to order</div>
+        </div>
+        <div class="step">
+          <div class="step-num">04</div>
+          <div class="step-label">Delivered</div>
+          <div class="step-desc">To your door, nationwide & worldwide</div>
+        </div>
+      </div>
+      <a href="https://thefabricbutik.com/custom-printing/" target="_blank" class="btn-primary">Start a Custom Order</a>
+    </div>
+  </section>
+
+  <!-- REVIEWS -->
+  <section class="reviews-section">
+    <div class="reviews-inner">
+      <span class="section-tag">What People Say</span>
+      <div class="stars-row">★★★★★</div>
+      <div class="rating-big">4.9</div>
+      <div class="rating-label">Based on Google Reviews · The Fabric Butik, Lugbe Abuja</div>
+
+      <div class="reviews-grid">
+        <div class="review-card">
+          <div class="review-stars">★★★★★</div>
+          <p class="review-text">"Absolutely love the quality of fabric I got here. The range is incredible and the staff are so helpful with recommendations."</p>
+          <span class="review-name">Google Reviewer</span>
+        </div>
+        <div class="review-card">
+          <div class="review-stars">★★★★★</div>
+          <p class="review-text">"Best fabric store in Abuja, hands down. The custom printing service is a game changer for my fashion business."</p>
+          <span class="review-name">Google Reviewer</span>
+        </div>
+        <div class="review-card">
+          <div class="review-stars">★★★★★</div>
+          <p class="review-text">"Fast delivery, genuine fabrics, and very professional. I've been ordering from them for months and never disappointed."</p>
+          <span class="review-name">Google Reviewer</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact" class="contact-section">
+    <div class="contact-inner">
+      <span class="section-tag" style="display:block; text-align:center;">Get In Touch</span>
+      <h2 class="section-title">Visit Us or<br><em>Order Today</em></h2>
+      <div class="contact-cards">
+        <div class="contact-card">
+          <div class="contact-card-icon">📍</div>
+          <div class="contact-card-label">Store Location</div>
+          <div class="contact-card-val">431 Crescent, Joseph A. Onah, FHA Lugbe, Abuja FCT</div>
+        </div>
+        <div class="contact-card">
+          <div class="contact-card-icon">💬</div>
+          <div class="contact-card-label">WhatsApp Orders</div>
+          <div class="contact-card-val">
+            <a href="https://wa.me/2348136011206">0813 601 1206</a><br/>
+            <a href="https://wa.me/2349124896812">0912 489 6812</a>
+          </div>
+        </div>
+        <div class="contact-card">
+          <div class="contact-card-icon">✉️</div>
+          <div class="contact-card-label">Email</div>
+          <div class="contact-card-val"><a href="mailto:info@thefabricbutik.com">info@thefabricbutik.com</a></div>
+        </div>
+        <div class="contact-card">
+          <div class="contact-card-icon">📸</div>
+          <div class="contact-card-label">Instagram</div>
+          <div class="contact-card-val"><a href="https://instagram.com/thefabricbutik" target="_blank">@thefabricbutik</a></div>
+        </div>
+      </div>
+
+      <div class="ornament">
+        <div class="ornament-line"></div>
+        <div class="ornament-diamond"></div>
+        <div class="ornament-line"></div>
+      </div>
+
+      <p style="font-size:0.78rem; color:rgba(245,237,216,0.5); margin-bottom:28px;">
+        Store hours: Monday – Saturday, 9am – 6pm · Doorstep delivery available nationwide
+      </p>
+      <a href="https://wa.me/2348136011206" target="_blank" class="btn-primary" style="margin-right:12px;">Order on WhatsApp</a>
+      <a href="https://thefabricbutik.com/shop/" target="_blank" class="btn-outline">Shop Online</a>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div>
+      <div class="footer-logo">The Fabric Butik</div>
+      <div class="footer-tagline">Premium Fabrics & Custom Printing · Abuja, Nigeria</div>
+    </div>
+    <div class="footer-links">
+      <a href="https://thefabricbutik.com/shop/" target="_blank">Shop</a>
+      <a href="https://thefabricbutik.com/custom-printing/" target="_blank">Custom Printing</a>
+      <a href="https://instagram.com/thefabricbutik" target="_blank">Instagram</a>
+      <a href="https://thefabricbutik.com/contact-us/" target="_blank">Contact</a>
+    </div>
+    <div class="footer-copy">© 2026 The Fabric Butik. All rights reserved.</div>
+  </footer>
+
+</body>
+</html>
+<script id="__base44_dark_class_post__">document.documentElement.classList.remove('dark');</script></body></html>
